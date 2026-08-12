@@ -7,6 +7,8 @@ public class Main {
         ejecutarMaximoMinimo();
         System.out.println();
         ejecutarMergeSort();
+        System.out.println();
+        ejecutarCuadratico();
     }
 
     /**
@@ -123,6 +125,48 @@ public class Main {
                     mergeSort.obtenerOperacionesMezcla(),
                     mergeSort.obtenerComparaciones(),
                     referenciaTeorica);
+        }
+    }
+
+    /**
+     * Ejecuta las pruebas del algoritmo #4.
+     */
+    private static void ejecutarCuadratico() {
+        int[] tamanosCuadraticos = {10, 20, 40, 80, 160, 320, 640};
+        Cuadratico cuadratico = new Cuadratico();
+        long operacionesAnteriores = 0;
+
+        System.out.println("================================================================================");
+        System.out.println("ALGORITMO RECURSIVO CUADRATICO - O(n^2)");
+        System.out.println("================================================================================");
+        System.out.println();
+        System.out.printf("%-8s %-18s %-18s %-12s %-10s%n",
+                "n", "Operaciones", "n(n+1)/2", "Coincide", "Razon");
+        System.out.println("--------------------------------------------------------------------");
+
+        for (int n : tamanosCuadraticos) {
+            cuadratico.reiniciarContador();
+            cuadratico.ejecutar(n);
+
+            long operaciones = cuadratico.obtenerContador();
+            long referenciaTeorica = (long) n * (n + 1) / 2;
+            boolean coincide = operaciones == referenciaTeorica;
+
+            String razon;
+            if (operacionesAnteriores == 0) {
+                razon = "-";
+            } else {
+                razon = String.format("%.4f", (double) operaciones / operacionesAnteriores);
+            }
+
+            System.out.printf("%-8d %-18d %-18d %-12s %-10s%n",
+                    n,
+                    operaciones,
+                    referenciaTeorica,
+                    coincide ? "Si" : "No",
+                    razon);
+
+            operacionesAnteriores = operaciones;
         }
     }
 
