@@ -11,6 +11,8 @@ public class Main {
         ejecutarCuadratico();
         System.out.println();
         ejecutarCubico();
+        System.out.println();
+        ejecutarPotenciaDiez();
     }
 
     /**
@@ -212,6 +214,81 @@ public class Main {
 
             operacionesAnteriores = operaciones;
         }
+    }
+
+    /**
+     * Ejecuta las pruebas del algoritmo #6.
+     */
+    private static void ejecutarPotenciaDiez() {
+        int[] tamanosPotenciaDiez = {1, 2, 3, 4, 5, 6};
+        PotenciaDiez potenciaDiez = new PotenciaDiez();
+        long operacionesAnteriores = 0;
+
+        System.out.println("============================================================================================================");
+        System.out.println("ALGORITMO RECURSIVO POTENCIA DIEZ - O(n^10)");
+        System.out.println("============================================================================================================");
+        System.out.println();
+        System.out.printf("%-5s %-18s %-22s %-14s %-18s %-10s %-10s%n",
+                "n", "Operaciones", "Incremento experimental", "n^9",
+                "Sumatoria k^9", "Coincide", "Razon");
+        System.out.println("------------------------------------------------------------------------------------------------------------");
+
+        for (int n : tamanosPotenciaDiez) {
+            potenciaDiez.reiniciarContador();
+            potenciaDiez.ejecutar(n);
+
+            long operaciones = potenciaDiez.obtenerContador();
+            long incrementoExperimental = operaciones - operacionesAnteriores;
+            long potenciaNueve = calcularPotenciaEntera(n, 9);
+            long referenciaTeorica = calcularSumatoriaPotenciasNueve(n);
+            boolean coincide = operaciones == referenciaTeorica
+                    && incrementoExperimental == potenciaNueve;
+
+            String razon;
+            if (operacionesAnteriores == 0) {
+                razon = "-";
+            } else {
+                razon = String.format("%.4f", (double) operaciones / operacionesAnteriores);
+            }
+
+            System.out.printf("%-5d %-18d %-22d %-14d %-18d %-10s %-10s%n",
+                    n,
+                    operaciones,
+                    incrementoExperimental,
+                    potenciaNueve,
+                    referenciaTeorica,
+                    coincide ? "Si" : "No",
+                    razon);
+
+            operacionesAnteriores = operaciones;
+        }
+    }
+
+    /**
+     * Calcula la referencia sumando potencias enteras sin modificar ningun
+     * contador experimental.
+     */
+    private static long calcularSumatoriaPotenciasNueve(int n) {
+        long suma = 0;
+
+        for (int k = 1; k <= n; k++) {
+            suma += calcularPotenciaEntera(k, 9);
+        }
+
+        return suma;
+    }
+
+    /**
+     * Calcula una potencia para la referencia mediante multiplicacion entera.
+     */
+    private static long calcularPotenciaEntera(int base, int exponente) {
+        long resultado = 1;
+
+        for (int i = 0; i < exponente; i++) {
+            resultado *= base;
+        }
+
+        return resultado;
     }
 
     /**
