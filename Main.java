@@ -5,6 +5,8 @@ public class Main {
         ejecutarBusquedaBinaria();
         System.out.println();
         ejecutarMaximoMinimo();
+        System.out.println();
+        ejecutarMergeSort();
     }
 
     /**
@@ -78,6 +80,53 @@ public class Main {
     }
 
     /**
+     * Ejecuta el ejemplo y las pruebas del algoritmo #3.
+     */
+    private static void ejecutarMergeSort() {
+        MergeSort mergeSort = new MergeSort();
+        int[] ejemplo = {38, 27, 43, 3, 9, 82, 10, 1};
+
+        System.out.println("===============================================================================================");
+        System.out.println("MERGE SORT RECURSIVO - O(n lg n)");
+        System.out.println("===============================================================================================");
+        System.out.println();
+        System.out.print("Ejemplo antes:   ");
+        imprimirArreglo(ejemplo);
+
+        mergeSort.reiniciarContadores();
+        mergeSort.ordenar(ejemplo, 0, ejemplo.length - 1);
+
+        System.out.print("Ejemplo despues: ");
+        imprimirArreglo(ejemplo);
+        System.out.println();
+
+        System.out.printf("%-8s %-16s %-14s %-20s %-16s %-12s%n",
+                "n", "Desordenado", "Ordenado", "Operaciones mezcla",
+                "Comparaciones", "n*log2(n)");
+        System.out.println("-----------------------------------------------------------------------------------------------");
+
+        for (int n : TAMANOS) {
+            int[] arreglo = crearArregloDesordenado(n);
+            boolean estabaDesordenado = !estaOrdenado(arreglo);
+
+            mergeSort.reiniciarContadores();
+            mergeSort.ordenar(arreglo, 0, arreglo.length - 1);
+
+            boolean quedoOrdenado = estaOrdenado(arreglo);
+            int logaritmoBaseDos = (int) (Math.log(n) / Math.log(2));
+            long referenciaTeorica = (long) n * logaritmoBaseDos;
+
+            System.out.printf("%-8d %-16s %-14s %-20d %-16d %-12d%n",
+                    n,
+                    estabaDesordenado ? "Si" : "No",
+                    quedoOrdenado ? "Si" : "No",
+                    mergeSort.obtenerOperacionesMezcla(),
+                    mergeSort.obtenerComparaciones(),
+                    referenciaTeorica);
+        }
+    }
+
+    /**
      * Crea el arreglo ordenado [0, 1, 2, ..., n - 1].
      */
     private static int[] crearArregloOrdenado(int n) {
@@ -101,5 +150,47 @@ public class Main {
         }
 
         return arreglo;
+    }
+
+    /**
+     * Crea una permutacion determinista y desordenada de 0 hasta n - 1.
+     */
+    private static int[] crearArregloDesordenado(int n) {
+        int[] arreglo = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            arreglo[i] = (i * 37 + 13) % n;
+        }
+
+        return arreglo;
+    }
+
+    /**
+     * Comprueba que cada elemento sea menor o igual que el siguiente.
+     */
+    private static boolean estaOrdenado(int[] arreglo) {
+        for (int i = 0; i < arreglo.length - 1; i++) {
+            if (arreglo[i] > arreglo[i + 1]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Muestra un arreglo pequeno sin utilizar funciones de ordenamiento.
+     */
+    private static void imprimirArreglo(int[] arreglo) {
+        System.out.print("[");
+
+        for (int i = 0; i < arreglo.length; i++) {
+            if (i > 0) {
+                System.out.print(", ");
+            }
+            System.out.print(arreglo[i]);
+        }
+
+        System.out.println("]");
     }
 }
