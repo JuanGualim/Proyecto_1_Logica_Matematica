@@ -15,6 +15,8 @@ public class Main {
         ejecutarPotenciaDiez();
         System.out.println();
         ejecutarPermutaciones();
+        System.out.println();
+        ejecutarHanoi();
     }
 
     /**
@@ -318,6 +320,79 @@ public class Main {
 
             permutacionesAnteriores = cantidadGenerada;
         }
+    }
+
+    /**
+     * Ejecuta el ejemplo y las pruebas del algoritmo #8.
+     */
+    private static void ejecutarHanoi() {
+        Hanoi hanoi = new Hanoi();
+        long movimientosAnteriores = 0;
+
+        System.out.println("===============================================================================================");
+        System.out.println("TORRES DE HANOI RECURSIVO - O(2^n)");
+        System.out.println("===============================================================================================");
+        System.out.println();
+        System.out.println("Movimientos para n = 3:");
+
+        hanoi.reiniciarContador();
+        hanoi.resolver(3, 'A', 'C', 'B', true);
+        System.out.println("Total del ejemplo: " + hanoi.obtenerContadorMovimientos());
+        System.out.println();
+
+        System.out.printf("%-5s %-20s %-18s %-14s %-10s %-10s%n",
+                "n", "Movimientos reales", "2H(n-1)+1", "2^n - 1",
+                "Coincide", "Razon");
+        System.out.println("-----------------------------------------------------------------------------------------------");
+
+        for (int n = 1; n <= 20; n++) {
+            hanoi.reiniciarContador();
+            hanoi.resolver(n, 'A', 'C', 'B', false);
+
+            long movimientos = hanoi.obtenerContadorMovimientos();
+            long referenciaTeorica = calcularReferenciaHanoi(n);
+
+            String referenciaRecurrencia;
+            boolean cumpleRecurrencia;
+            String razon;
+
+            if (n == 1) {
+                referenciaRecurrencia = "-";
+                cumpleRecurrencia = movimientos == 1;
+                razon = "-";
+            } else {
+                long valorRecurrencia = 2 * movimientosAnteriores + 1;
+                referenciaRecurrencia = Long.toString(valorRecurrencia);
+                cumpleRecurrencia = movimientos == valorRecurrencia;
+                razon = String.format(
+                        "%.4f", (double) movimientos / movimientosAnteriores);
+            }
+
+            boolean coincide = movimientos == referenciaTeorica && cumpleRecurrencia;
+
+            System.out.printf("%-5d %-20d %-18s %-14d %-10s %-10s%n",
+                    n,
+                    movimientos,
+                    referenciaRecurrencia,
+                    referenciaTeorica,
+                    coincide ? "Si" : "No",
+                    razon);
+
+            movimientosAnteriores = movimientos;
+        }
+    }
+
+    /**
+     * Calcula 2^n - 1 solamente como referencia teorica.
+     */
+    private static long calcularReferenciaHanoi(int n) {
+        long potenciaDeDos = 1;
+
+        for (int i = 0; i < n; i++) {
+            potenciaDeDos *= 2;
+        }
+
+        return potenciaDeDos - 1;
     }
 
     /**
