@@ -9,6 +9,8 @@ public class Main {
         ejecutarMergeSort();
         System.out.println();
         ejecutarCuadratico();
+        System.out.println();
+        ejecutarCubico();
     }
 
     /**
@@ -160,6 +162,48 @@ public class Main {
             }
 
             System.out.printf("%-8d %-18d %-18d %-12s %-10s%n",
+                    n,
+                    operaciones,
+                    referenciaTeorica,
+                    coincide ? "Si" : "No",
+                    razon);
+
+            operacionesAnteriores = operaciones;
+        }
+    }
+
+    /**
+     * Ejecuta las pruebas del algoritmo #5.
+     */
+    private static void ejecutarCubico() {
+        int[] tamanosCubicos = {10, 20, 40, 80, 160, 320, 640};
+        Cubico cubico = new Cubico();
+        long operacionesAnteriores = 0;
+
+        System.out.println("=====================================================================================");
+        System.out.println("ALGORITMO RECURSIVO CUBICO - O(n^3)");
+        System.out.println("=====================================================================================");
+        System.out.println();
+        System.out.printf("%-8s %-20s %-24s %-12s %-10s%n",
+                "n", "Operaciones", "n(n+1)(2n+1)/6", "Coincide", "Razon");
+        System.out.println("-------------------------------------------------------------------------------");
+
+        for (int n : tamanosCubicos) {
+            cubico.reiniciarContador();
+            cubico.ejecutar(n);
+
+            long operaciones = cubico.obtenerContador();
+            long referenciaTeorica = (long) n * (n + 1) * (2L * n + 1) / 6;
+            boolean coincide = operaciones == referenciaTeorica;
+
+            String razon;
+            if (operacionesAnteriores == 0) {
+                razon = "-";
+            } else {
+                razon = String.format("%.4f", (double) operaciones / operacionesAnteriores);
+            }
+
+            System.out.printf("%-8d %-20d %-24d %-12s %-10s%n",
                     n,
                     operaciones,
                     referenciaTeorica,
