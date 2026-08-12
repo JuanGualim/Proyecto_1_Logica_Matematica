@@ -13,6 +13,8 @@ public class Main {
         ejecutarCubico();
         System.out.println();
         ejecutarPotenciaDiez();
+        System.out.println();
+        ejecutarPermutaciones();
     }
 
     /**
@@ -262,6 +264,86 @@ public class Main {
 
             operacionesAnteriores = operaciones;
         }
+    }
+
+    /**
+     * Ejecuta el ejemplo y las pruebas del algoritmo #7.
+     */
+    private static void ejecutarPermutaciones() {
+        int[] tamanosPermutaciones = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+        Permutaciones permutaciones = new Permutaciones();
+        int[] ejemplo = {1, 2, 3};
+        long permutacionesAnteriores = 0;
+
+        System.out.println("====================================================================================");
+        System.out.println("GENERACION RECURSIVA DE PERMUTACIONES - O(n!)");
+        System.out.println("====================================================================================");
+        System.out.println();
+        System.out.println("Permutaciones generadas para [1, 2, 3]:");
+
+        permutaciones.reiniciarContador();
+        permutaciones.generar(ejemplo, 0, true);
+        System.out.println("Total del ejemplo: "
+                + permutaciones.obtenerContadorPermutaciones());
+        System.out.println();
+
+        System.out.printf("%-8s %-28s %-18s %-12s %-10s%n",
+                "n", "Permutaciones generadas", "n! teorico", "Coincide", "Razon");
+        System.out.println("----------------------------------------------------------------------------");
+
+        for (int n : tamanosPermutaciones) {
+            int[] arreglo = crearArregloConsecutivo(n);
+
+            permutaciones.reiniciarContador();
+            permutaciones.generar(arreglo, 0, false);
+
+            long cantidadGenerada = permutaciones.obtenerContadorPermutaciones();
+            long referenciaTeorica = calcularFactorial(n);
+            boolean coincide = cantidadGenerada == referenciaTeorica;
+
+            String razon;
+            if (permutacionesAnteriores == 0) {
+                razon = "-";
+            } else {
+                razon = String.format(
+                        "%.4f", (double) cantidadGenerada / permutacionesAnteriores);
+            }
+
+            System.out.printf("%-8d %-28d %-18d %-12s %-10s%n",
+                    n,
+                    cantidadGenerada,
+                    referenciaTeorica,
+                    coincide ? "Si" : "No",
+                    razon);
+
+            permutacionesAnteriores = cantidadGenerada;
+        }
+    }
+
+    /**
+     * Calcula n! solamente como referencia teorica.
+     */
+    private static long calcularFactorial(int n) {
+        long factorial = 1;
+
+        for (int i = 2; i <= n; i++) {
+            factorial *= i;
+        }
+
+        return factorial;
+    }
+
+    /**
+     * Crea el arreglo [1, 2, ..., n] que se utilizara en las pruebas.
+     */
+    private static int[] crearArregloConsecutivo(int n) {
+        int[] arreglo = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            arreglo[i] = i + 1;
+        }
+
+        return arreglo;
     }
 
     /**
